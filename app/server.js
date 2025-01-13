@@ -23,6 +23,11 @@ app.get("/", (req, res) => {
     res.redirect("/login");
 });
 
+// Sign up
+app.get("/signup", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "pages", "signup", "signup.html"));
+});
+
 // Démarrage du serveur
 https.createServer(options, app).listen(443, () => {
     console.log("Server running on port https://localhost:443");
