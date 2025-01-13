@@ -1,6 +1,7 @@
 const express = require("express");
 const https = require("https");
 const fs = require("fs");
+const path = require('path');
 
 const app = express();
 
@@ -11,6 +12,16 @@ const options = {
 
 const userRoute = require('./routes/User');
 app.use('/user', userRoute);
+
+// Login
+app.get("/login", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "pages", "login", "login.html"));
+});
+
+// Page par défaut (login)
+app.get("/", (req, res) => {
+    res.redirect("/login");
+});
 
 // Démarrage du serveur
 https.createServer(options, app).listen(443, () => {
