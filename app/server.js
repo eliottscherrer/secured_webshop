@@ -13,6 +13,8 @@ const options = {
 const userRoute = require('./routes/User');
 app.use('/user', userRoute);
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Login
 app.get("/login", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "pages", "login", "login.html"));
