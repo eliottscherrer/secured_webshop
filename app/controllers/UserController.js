@@ -75,4 +75,39 @@ const signupUser = async (req, res) => {
     }
 };
 
-module.exports = { getUser, signupUser };
+const loginUser = (req, res) => {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+        return res
+            .status(400)
+            .json({ message: "Username and password are required." });
+    }
+
+    const query = "SELECT password_hash FROM t_users WHERE username = ?";
+    db.query(query, [username], (err, results) => {
+        if (err) {
+            return res
+                .status(500)
+                .json({ message: "Database error.", error: err });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: "User not found." });
+        }
+
+        const passwordHash = results[0].password_hash;
+
+        // TODO: Compare hashed password (stored in DB) with the provided password
+        if (password !== passwordHash) {
+            return res.status(401).json({ message: "Invalid credentials." });
+        }
+
+        res.status(200).json({
+            message: "Login successful!",
+            username: username,
+        });
+    });
+};
+
+module.exports = { getUser, signupUser, loginUser };
