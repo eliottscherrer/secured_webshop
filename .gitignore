@@ -11,3 +11,7 @@
 # Certificats
 *.pem
 *.crt
+
+# Secrets
+*.env
+.env
