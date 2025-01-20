@@ -3,6 +3,9 @@ const https = require("https");
 const fs = require("fs");
 const path = require("path");
 
+const dotenv = require("dotenv");
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
+
 const app = express();
 
 app.use(express.json());
@@ -38,6 +41,7 @@ app.get("/signup", (req, res) => {
 });
 
 // Démarrage du serveur
-https.createServer(options, app).listen(443, () => {
-    console.log("Server running on port https://localhost:443");
+const port = process.env.PORT || 443;
+https.createServer(options, app).listen(port, () => {
+    console.log(`Server running on port https://localhost:${port}`);
 });
