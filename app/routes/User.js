@@ -4,7 +4,7 @@ const controller = require("../controllers/UserController");
 const router = express.Router();
 
 // Define routes and associate them with controller functions
-router.get("/", controller.getUser);
+router.get("/:username", controller.getUser);
 router.post("/signup", controller.signupUser);
 
 module.exports = router;
