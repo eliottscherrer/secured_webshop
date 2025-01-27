@@ -1,4 +1,5 @@
 const mysql = require("mysql2");
+const bcrypt = require("bcrypt");
 
 // MySQL Connection
 const db = mysql.createConnection({
@@ -51,12 +52,16 @@ const signupUser = async (req, res) => {
     }
 
     try {
-        // TODO: hash the password before inserting in database
+        // Generate salt
+        const salt = await bcrypt.genSalt(10);
+        // Hash the password before inserting in database
+        // TODO: Make it the manual way
+        const hashedPassword = await bcrypt.hash(password, salt);
 
         // Insert user into the database
         const query =
-            "INSERT INTO t_users (username, password_hash) VALUES (?, ?)";
-        db.query(query, [username, password], (err, result) => {
+            "INSERT INTO t_users (username, password_hash, password_salt) VALUES (?, ?, ?)";
+        db.query(query, [username, hashedPassword, salt], (err, result) => {
             if (err) {
                 if (err.code === "ER_DUP_ENTRY") {
                     return res
@@ -84,8 +89,9 @@ const loginUser = (req, res) => {
             .json({ message: "Username and password are required." });
     }
 
-    const query = "SELECT password_hash FROM t_users WHERE username = ?";
-    db.query(query, [username], (err, results) => {
+    const query =
+        "SELECT password_hash, password_salt FROM t_users WHERE username = ?";
+    db.query(query, [username], async (err, results) => {
         if (err) {
             return res
                 .status(500)
@@ -97,9 +103,14 @@ const loginUser = (req, res) => {
         }
 
         const passwordHash = results[0].password_hash;
+        const salt = results[0].password_salt;
 
-        // TODO: Compare hashed password (stored in DB) with the provided password
-        if (password !== passwordHash) {
+        // Hash the provided password with the stored salt
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        // TODO: Make it the manual way
+        // Compare hashed password (stored in DB) with the hashed provided password
+        if (hashedPassword !== passwordHash) {
             return res.status(401).json({ message: "Invalid credentials." });
         }
 
