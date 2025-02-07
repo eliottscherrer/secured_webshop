@@ -2,10 +2,12 @@ const mysql = require("mysql2");
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
 const path = require("path");
+const { hashPasswordManual, hashPassword } = require("../utils/hashingUtils");
 
 dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
 const PEPPER = process.env.PEPPER || "onglieronglieronglieronglier";
+const HASH_METHOD = process.env.HASH_METHOD || "bcrypt";
 
 // MySQL Connection
 const db = mysql.createConnection({
@@ -58,26 +60,40 @@ const signupUser = async (req, res) => {
     }
 
     try {
-        // Hash the password directly (bcrypt already includes a salt)
-        const hashedPassword = await bcrypt.hash(password + PEPPER, 10);
+        let hashedPassword, salt;
+
+        if (HASH_METHOD === "bcrypt") {
+            // If using bcrypt
+            hashedPassword = await bcrypt.hash(password + PEPPER, 10);
+        } else {
+            // If using manual hashing
+            const { hashedPassword: manualHash, salt: manualSalt } =
+                await hashPassword(password);
+            hashedPassword = manualHash;
+            salt = manualSalt;
+        }
 
         // Insert user into the database
         const query =
-            "INSERT INTO t_users (username, password_hash) VALUES (?, ?)";
-        db.query(query, [username, hashedPassword], (err, result) => {
-            if (err) {
-                if (err.code === "ER_DUP_ENTRY") {
+            "INSERT INTO t_users (username, password_hash, password_salt) VALUES (?, ?, ?)";
+        db.query(
+            query,
+            [username, hashedPassword, salt || ""],
+            (err, result) => {
+                if (err) {
+                    if (err.code === "ER_DUP_ENTRY") {
+                        return res
+                            .status(400)
+                            .json({ message: "Username already exists." });
+                    }
                     return res
-                        .status(400)
-                        .json({ message: "Username already exists." });
+                        .status(500)
+                        .json({ message: "Database error.", error: err });
                 }
-                return res
-                    .status(500)
-                    .json({ message: "Database error.", error: err });
-            }
 
-            res.status(201).json({ message: "User created successfully!" });
-        });
+                res.status(201).json({ message: "User created successfully!" });
+            }
+        );
     } catch (error) {
         res.status(500).json({ message: "Server error.", error });
     }
@@ -92,7 +108,8 @@ const loginUser = (req, res) => {
             .json({ message: "Username and password are required." });
     }
 
-    const query = "SELECT password_hash FROM t_users WHERE username = ?";
+    const query =
+        "SELECT password_hash, password_salt FROM t_users WHERE username = ?";
     db.query(query, [username], async (err, results) => {
         if (err) {
             return res
@@ -104,10 +121,20 @@ const loginUser = (req, res) => {
             return res.status(404).json({ message: "User not found." });
         }
 
-        const storedHash = results[0].password_hash;
+        const { password_hash: storedHash, password_salt: storedSalt } =
+            results[0];
 
-        // Compare hashed password (stored in DB) with the user-provided password
-        const isMatch = await bcrypt.compare(password + PEPPER, storedHash);
+        let isMatch = false;
+
+        // Check if the password is hashed with bcrypt
+        if (!storedSalt) {
+            isMatch = await bcrypt.compare(password + PEPPER, storedHash);
+        } else {
+            // If using manual hashing, compare manually hashed values
+            const hashedPassword = hashPasswordManual(password, storedSalt);
+            isMatch = storedHash === hashedPassword;
+        }
+
         if (!isMatch) {
             return res.status(401).json({ message: "Invalid credentials." });
         }
