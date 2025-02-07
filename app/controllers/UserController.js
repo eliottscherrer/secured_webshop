@@ -1,5 +1,6 @@
 const mysql = require("mysql2");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken"); // NEW
 const dotenv = require("dotenv");
 const path = require("path");
 const { hashPasswordManual, hashPassword } = require("../utils/hashingUtils");
@@ -8,6 +9,8 @@ dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
 const PEPPER = process.env.PEPPER || "onglieronglieronglieronglier";
 const HASH_METHOD = process.env.HASH_METHOD || "bcrypt";
+// Use a secret from the environment or a fallback:
+const JWT_SECRET = process.env.JWT_SECRET || "onglieronglieronglieronglier";
 
 // MySQL Connection
 const db = mysql.createConnection({
@@ -25,6 +28,26 @@ db.connect((err) => {
         console.log("Connected to MySQL.");
     }
 });
+
+const getUserPromise = (username) => {
+    return new Promise((resolve, reject) => {
+        if (!username) {
+            return reject(new Error("Username is required."));
+        }
+
+        const query =
+            "SELECT user_id, username, role, created_at FROM t_users WHERE username = ?";
+        db.query(query, [username], (err, results) => {
+            if (err) {
+                return reject(err);
+            }
+            if (results.length === 0) {
+                return reject(new Error("User not found."));
+            }
+            resolve(results[0]);
+        });
+    });
+};
 
 const getUser = (req, res) => {
     const { username } = req.params;
@@ -91,7 +114,20 @@ const signupUser = async (req, res) => {
                         .json({ message: "Database error.", error: err });
                 }
 
-                res.status(201).json({ message: "User created successfully!" });
+                // Generate JWT token on signup to auto-login
+                const token = jwt.sign({ username }, JWT_SECRET, {
+                    expiresIn: "1h",
+                });
+
+                // Set the token in an HTTP-only cookie
+                res.cookie("token", token, {
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: "strict",
+                });
+                res.status(201).json({
+                    message: "User created successfully and logged in!",
+                });
             }
         );
     } catch (error) {
@@ -139,6 +175,13 @@ const loginUser = (req, res) => {
             return res.status(401).json({ message: "Invalid credentials." });
         }
 
+        // Generate JWT token on login
+        const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: "1h" });
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict",
+        });
         res.status(200).json({
             message: "Login successful!",
             username: username,
@@ -146,4 +189,9 @@ const loginUser = (req, res) => {
     });
 };
 
-module.exports = { getUser, signupUser, loginUser };
+const logoutUser = (req, res) => {
+    res.clearCookie("token");
+    res.redirect("/login");
+};
+
+module.exports = { getUserPromise, getUser, signupUser, loginUser, logoutUser };

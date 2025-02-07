@@ -51,8 +51,8 @@ submitInput.addEventListener("click", async function (event) {
         const loginData = await validateLogin(username, password);
 
         if (loginData) {
-            // Redirect to user's profile after successful login
-            window.location.href = `/user/${username}`;
+            // Redirect to protected profile page
+            window.location.href = `/profile`;
         }
     }
 });

@@ -47,9 +47,9 @@ submitInput.addEventListener("click", async function (event) {
 
         const result = await response.json();
         if (response.ok) {
-            // Notify success and redirect to login page
+            // Notify success and redirect to profile page
             alert(result.message);
-            window.location.href = "/login"; // TODO: Add JWT token to avoid having to login after signup
+            window.location.href = "/profile";
         } else {
             alert(result.message || "Une erreur est survenue.");
         }
