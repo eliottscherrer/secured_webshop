@@ -194,4 +194,50 @@ const logoutUser = (req, res) => {
     res.redirect("/login");
 };
 
-module.exports = { getUserPromise, getUser, signupUser, loginUser, logoutUser };
+const searchUsersPromise = (searchTerm) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT *
+            FROM t_users
+            WHERE username LIKE ?
+        `;
+        db.query(query, [`%${searchTerm}%`], (err, results) => {
+            if (err) return reject(err);
+            resolve(results);
+        });
+    });
+};
+
+const profile = async (req, res) => {
+    try {
+        const username = req.user.username;
+        const user = await getUserPromise(username);
+        const isAdmin = user.role === "admin";
+
+        // If there's a "search" query param, and user is admin, do a search
+        const searchTerm = req.query.search;
+        let userResults = null; // default, so we can distinguish from '[]'
+
+        if (isAdmin && searchTerm) {
+            userResults = await searchUsersPromise(searchTerm);
+        }
+
+        res.render("profile", {
+            username,
+            isAdmin,
+            users: userResults, // array or null
+        });
+    } catch (error) {
+        console.error("Error loading profile:", error);
+        return res.redirect("/login");
+    }
+};
+
+module.exports = {
+    getUserPromise,
+    getUser,
+    signupUser,
+    loginUser,
+    logoutUser,
+    profile,
+};

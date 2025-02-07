@@ -43,20 +43,9 @@ app.get("/signup", (req, res) => {
     );
 });
 
-const getUserPromise = require("./controllers/UserController").getUserPromise;
-app.get("/profile", authenticateJWT, async (req, res) => {
-    const username = req.user.username;
-    try {
-        const user = await getUserPromise(username);
-        res.render("profile", {
-            username,
-            isAdmin: user.role === "admin",
-        });
-    } catch (error) {
-        console.error("Error fetching user:", error);
-        return res.redirect("/login");
-    }
-});
+// Profile route
+const userController = require("./controllers/UserController");
+app.get("/profile", authenticateJWT, userController.profile);
 
 // Default route
 app.get("/", (req, res) => {
