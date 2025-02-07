@@ -1,5 +1,10 @@
 const mysql = require("mysql2");
 const bcrypt = require("bcrypt");
+const path = require("path");
+const dotenv = require("dotenv");
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
+
+const PEPPER = process.env.PEPPER || "onglieronglieronglieronglier";
 
 // MySQL Connection
 const db = mysql.createConnection({
@@ -56,7 +61,7 @@ const signupUser = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         // Hash the password before inserting in database
         // TODO: Make it the manual way
-        const hashedPassword = await bcrypt.hash(password, salt);
+        const hashedPassword = await bcrypt.hash(password + PEPPER, salt);
 
         // Insert user into the database
         const query =
@@ -106,7 +111,7 @@ const loginUser = (req, res) => {
         const salt = results[0].password_salt;
 
         // Hash the provided password with the stored salt
-        const hashedPassword = await bcrypt.hash(password, salt);
+        const hashedPassword = await bcrypt.hash(password + PEPPER, salt);
 
         // TODO: Make it the manual way
         // Compare hashed password (stored in DB) with the hashed provided password
