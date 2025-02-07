@@ -33,7 +33,6 @@ CREATE TABLE `t_users` (
   `user_id` int NOT NULL,
   `username` varchar(40) COLLATE utf8mb4_general_ci NOT NULL,
   `password_hash` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `password_salt` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `role` enum('user','admin') COLLATE utf8mb4_general_ci DEFAULT 'user',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

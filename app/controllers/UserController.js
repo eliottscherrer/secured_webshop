@@ -1,7 +1,8 @@
 const mysql = require("mysql2");
 const bcrypt = require("bcrypt");
-const path = require("path");
 const dotenv = require("dotenv");
+const path = require("path");
+
 dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
 const PEPPER = process.env.PEPPER || "onglieronglieronglieronglier";
@@ -57,16 +58,13 @@ const signupUser = async (req, res) => {
     }
 
     try {
-        // Generate salt
-        const salt = await bcrypt.genSalt(10);
-        // Hash the password before inserting in database
-        // TODO: Make it the manual way
-        const hashedPassword = await bcrypt.hash(password + PEPPER, salt);
+        // Hash the password directly (bcrypt already includes a salt)
+        const hashedPassword = await bcrypt.hash(password + PEPPER, 10);
 
         // Insert user into the database
         const query =
-            "INSERT INTO t_users (username, password_hash, password_salt) VALUES (?, ?, ?)";
-        db.query(query, [username, hashedPassword, salt], (err, result) => {
+            "INSERT INTO t_users (username, password_hash) VALUES (?, ?)";
+        db.query(query, [username, hashedPassword], (err, result) => {
             if (err) {
                 if (err.code === "ER_DUP_ENTRY") {
                     return res
@@ -94,8 +92,7 @@ const loginUser = (req, res) => {
             .json({ message: "Username and password are required." });
     }
 
-    const query =
-        "SELECT password_hash, password_salt FROM t_users WHERE username = ?";
+    const query = "SELECT password_hash FROM t_users WHERE username = ?";
     db.query(query, [username], async (err, results) => {
         if (err) {
             return res
@@ -107,15 +104,11 @@ const loginUser = (req, res) => {
             return res.status(404).json({ message: "User not found." });
         }
 
-        const passwordHash = results[0].password_hash;
-        const salt = results[0].password_salt;
+        const storedHash = results[0].password_hash;
 
-        // Hash the provided password with the stored salt
-        const hashedPassword = await bcrypt.hash(password + PEPPER, salt);
-
-        // TODO: Make it the manual way
-        // Compare hashed password (stored in DB) with the hashed provided password
-        if (hashedPassword !== passwordHash) {
+        // Compare hashed password (stored in DB) with the user-provided password
+        const isMatch = await bcrypt.compare(password + PEPPER, storedHash);
+        if (!isMatch) {
             return res.status(401).json({ message: "Invalid credentials." });
         }
 
