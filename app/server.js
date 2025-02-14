@@ -31,6 +31,20 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Login route
 app.get("/login", (req, res) => {
+    // If there's a token in cookies, try to verify it
+    const token = req.cookies.token;
+
+    if (token) {
+        try {
+            // If token is valid (not expired, correct signature), redirect
+            jwt.verify(token, process.env.JWT_SECRET);
+            return res.redirect("/profile");
+        } catch (err) {
+            // Token invalid or expired, so just continue to show the login page
+        }
+    }
+
+    // Show the login page if no valid token
     res.sendFile(
         path.join(__dirname, "public", "pages", "login", "login.html")
     );
