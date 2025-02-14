@@ -25,7 +25,7 @@ const options = {
 };
 
 const userRoute = require("./routes/User");
-app.use("/user", userRoute);
+app.use("/api/users", userRoute);
 
 app.use(express.static(path.join(__dirname, "public")));
 
