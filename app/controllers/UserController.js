@@ -199,7 +199,7 @@ const searchUsersPromise = (searchTerm) => {
         const query = `
             SELECT *
             FROM t_users
-            WHERE username LIKE ?
+            WHERE username LIKE LOWER(?)
         `;
         db.query(query, [`%${searchTerm}%`], (err, results) => {
             if (err) return reject(err);
