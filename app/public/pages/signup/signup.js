@@ -37,7 +37,7 @@ submitInput.addEventListener("click", async function (event) {
     const password = passwordInput.value.trim();
 
     try {
-        const response = await fetch("/user/signup", {
+        const response = await fetch("/api/users/signup", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

@@ -12,7 +12,7 @@ function validateForm() {
 
 async function validateLogin(username, password) {
     try {
-        const response = await fetch("/user/login", {
+        const response = await fetch("/api/users/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
