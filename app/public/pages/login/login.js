@@ -22,7 +22,6 @@ async function validateLogin(username, password) {
 
         if (response.status === 200) {
             const data = await response.json(); // Parse the response to retrieve additional data if needed
-            alert("Connecté avec succès!");
             return data; // Return the response data to use for redirection
         } else if (response.status === 401) {
             alert("Identifiants invalides.");

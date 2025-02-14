@@ -1,62 +1,64 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= username %> Profile</title>
-    <link rel="stylesheet" href="/pages/styles.css" />
-  </head>
-  <body class="profile-body">
-    <div class="profile-container">
-      <h1>Hello <%= username %>!</h1>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= username %> Profile</title>
+        <link rel="stylesheet" href="/pages/styles.css" />
+    </head>
+    <body class="profile-body">
+        <div class="profile-container">
+            <h1>Hello <%= username %>!</h1>
 
-      <!-- Admin panel only shows if user is admin -->
-      <% if (isAdmin) { %>
-        <div class="admin-panel">
-          <h2>Admin Panel</h2>
+            <!-- Admin panel only shows if user is admin -->
+            <% if (isAdmin) { %>
+            <div class="admin-panel">
+                <h2>Admin Panel</h2>
 
-          <!-- Search form -->
-          <form action="/profile" method="GET" class="search-form">
-            <input 
-              type="text" 
-              name="search" 
-              placeholder="Search by name" 
-              required 
-            />
-            <button type="submit" class="btn-search">Search</button>
-          </form>
+                <!-- Search form -->
+                <form action="/profile" method="GET" class="search-form">
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Search by name"
+                        required
+                    />
+                    <button type="submit" class="btn-search">Search</button>
+                </form>
 
-          <!-- Search Results -->
-          <% if (users && users.length > 0) { %>
-            <h3>Search Results</h3>
-            <table class="results-table">
-              <thead>
-                <tr>
-                  <th>Username</th>
-                  <th>Role</th>
-                  <th>Created At</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% users.forEach(function(user) { %>
-                  <tr>
-                    <td><%= user.username %></td>
-                    <td><%= user.role %></td>
-                    <td><%= user.created_at %></td>
-                  </tr>
-                <% }); %>
-              </tbody>
-            </table>
-          <% } else if (users && users.length === 0) { %>
-            <p class="no-results">No users found matching the search criteria.</p>
-          <% } %>
+                <!-- Search Results -->
+                <% if (users && users.length > 0) { %>
+                <h3>Search Results</h3>
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Role</th>
+                            <th>Created At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% users.forEach(function(user) { %>
+                        <tr>
+                            <td><%= user.username %></td>
+                            <td><%= user.role %></td>
+                            <td><%= user.created_at %></td>
+                        </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+                <% } else if (users && users.length === 0) { %>
+                <p class="no-results">
+                    No users found matching the search criteria.
+                </p>
+                <% } %>
+            </div>
+            <% } %>
+
+            <!-- Logout button -->
+            <form action="/user/logout" method="POST" class="logout-form">
+                <button type="submit" class="btn-logout">Logout</button>
+            </form>
         </div>
-      <% } %>
-
-      <!-- Logout button -->
-      <form action="/user/logout" method="POST" class="logout-form">
-        <button type="submit" class="btn-logout">Logout</button>
-      </form>
-    </div>
-  </body>
+    </body>
 </html>

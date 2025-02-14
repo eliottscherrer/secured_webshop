@@ -1,3 +1,4 @@
+/* ========== RESET & BASE STYLES ========== */
 * {
     margin: 0;
     padding: 0;
@@ -7,56 +8,211 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f9;
+}
+
+/* ========== PROFILE PAGE ONLY ========== */
+.profile-body {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    flex-direction: column;
 }
 
-h1 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
+.profile-container {
+    background-color: #fff;
+    width: 100%;
+    max-width: 600px;
+    padding: 2rem;
+    margin: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.profile-container h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
     color: #333;
 }
 
-input[type="text"], input[type="password"], input[type="submit"] {
+.profile-container h2 {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: #444;
+}
+
+.profile-container h3 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    color: #444;
+}
+
+/* ========== FORMS & INPUTS (used in profile) ========== */
+form {
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    max-width: 350px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
     padding: 12px;
-    margin: 10px 0;
+    margin: 0.5rem 0;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1rem;
 }
 
-input[type="submit"] {
-    background-color: #4CAF50;
+/* Search Form - spacing */
+.search-form {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.search-form input[type="text"] {
+    flex: 1;
+    margin: 0;
+}
+
+.btn-search {
+    padding: 12px 20px;
+    background-color: #2196f3;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.btn-search:hover {
+    background-color: #1976d2;
+}
+
+/* Logout Button */
+.logout-form {
+    margin-top: 1.5rem;
+}
+
+.btn-logout {
+    padding: 12px 20px;
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.btn-logout:hover {
+    background-color: #d32f2f;
+}
+
+/* ========== TABLE FOR SEARCH RESULTS ========== */
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.5rem;
+}
+
+.results-table th,
+.results-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.results-table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+.no-results {
+    margin-top: 1rem;
+    font-style: italic;
+    color: #666;
+}
+
+/* ========== LOGIN & SIGNUP ONLY ========== */
+.login-body, 
+.signup-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f9;
+}
+
+.login-container,
+.signup-container {
+    margin: auto;
+    width: 300px;
+    max-width: 90%;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.login-container h1,
+.signup-container h1 {
+    margin-bottom: 1rem;
+    color: #333;
+    font-size: 1.8rem;
+}
+
+.login-container input[type="text"],
+.login-container input[type="password"],
+.signup-container input[type="text"],
+.signup-container input[type="password"] {
+    display: block;
+    width: 100%;
+    margin: 0.5rem 0;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.login-container input[type="submit"],
+.signup-container input[type="submit"] {
+    margin-top: 1rem;
+    background-color: #4caf50;
     color: white;
     border: none;
     cursor: pointer;
     font-weight: bold;
+    font-size: 1rem;
+    border-radius: 5px;
+    padding: 12px;
 }
 
-input[type="submit"]:hover {
+.login-container input[type="submit"]:hover,
+.signup-container input[type="submit"]:hover {
     background-color: #45a049;
 }
 
-a {
-    font-size: 1rem;
-    color: #007BFF;
+.login-container a,
+.signup-container a {
+    display: inline-block;
+    margin-top: 1rem;
     text-decoration: none;
-    margin-top: 10px;
+    color: #007BFF;
 }
 
-a:hover {
+.login-container a:hover,
+.signup-container a:hover {
     text-decoration: underline;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 400px;
 }
