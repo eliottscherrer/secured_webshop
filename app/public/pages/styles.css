@@ -21,11 +21,11 @@ body {
 .profile-container {
     background-color: #fff;
     width: 100%;
-    max-width: 600px;
+    max-width: 1000px;
     padding: 2rem;
     margin: 1rem;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
     display: flex;
     flex-direction: column;
@@ -146,7 +146,7 @@ input[type="password"] {
 }
 
 /* ========== LOGIN & SIGNUP ONLY ========== */
-.login-body, 
+.login-body,
 .signup-body {
     display: flex;
     justify-content: center;
@@ -163,7 +163,7 @@ input[type="password"] {
     background-color: #fff;
     border-radius: 8px;
     padding: 2rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
 
@@ -209,7 +209,7 @@ input[type="password"] {
     display: inline-block;
     margin-top: 1rem;
     text-decoration: none;
-    color: #007BFF;
+    color: #007bff;
 }
 
 .login-container a:hover,

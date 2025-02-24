@@ -200,6 +200,7 @@ const searchUsersPromise = (searchTerm) => {
             SELECT *
             FROM t_users
             WHERE username LIKE LOWER(?)
+            LIMIT 10
         `;
         db.query(query, [`%${searchTerm}%`], (err, results) => {
             if (err) return reject(err);

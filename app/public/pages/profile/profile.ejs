@@ -32,7 +32,9 @@
                 <table class="results-table">
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Username</th>
+                            <th>Use BCrypt</th>
                             <th>Role</th>
                             <th>Created At</th>
                         </tr>
@@ -40,8 +42,13 @@
                     <tbody>
                         <% users.forEach(function(user) { %>
                         <tr>
+                            <td><%= user.user_id %></td>
                             <td><%= user.username %></td>
-                            <td><%= user.role %></td>
+                            <td
+                                style="color: <%= user.password_salt ? 'green' : 'red' %>;"
+                            >
+                                <%= user.password_salt ? "true" : "false" %>
+                            </td>
                             <td><%= user.created_at %></td>
                         </tr>
                         <% }); %>
