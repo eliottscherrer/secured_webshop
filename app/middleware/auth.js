@@ -23,4 +23,19 @@ const authenticateJWT = (req, res, next) => {
     });
 };
 
-module.exports = authenticateJWT;
+const redirectIfAuthenticated = (req, res, next) => {
+    const token = req.cookies?.token;
+
+    if (token) {
+        try {
+            jwt.verify(token, process.env.JWT_SECRET);
+            return res.redirect("/profile");
+        } catch (err) {
+            // Token invalide ou expiré, on continue normalement
+        }
+    }
+
+    next();
+};
+
+module.exports = { authenticateJWT, redirectIfAuthenticated };
