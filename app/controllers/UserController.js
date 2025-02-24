@@ -234,6 +234,49 @@ const profile = async (req, res) => {
     }
 };
 
+const updateRole = (req, res) => {
+    const { user_id, role } = req.body;
+
+    if (!user_id || !role) {
+        return res
+            .status(400)
+            .json({ message: "user_id and role are required." });
+    }
+
+    // Ensure that the requester is authenticated (jwt payload contains username)
+    if (!req.user || !req.user.username) {
+        return res.status(401).json({ message: "Unauthorized." });
+    }
+
+    // Check if the requester is admin by retrieving their role from the database
+    const queryAdmin = "SELECT role FROM t_users WHERE username = ?";
+    db.query(queryAdmin, [req.user.username], (err, results) => {
+        if (err) {
+            return res
+                .status(500)
+                .json({ message: "Database error.", error: err });
+        }
+        if (results.length === 0 || results[0].role !== "admin") {
+            return res
+                .status(403)
+                .json({ message: "Forbidden. Admin access required." });
+        }
+
+        // Now update the role of the specified user
+        const queryUpdate = "UPDATE t_users SET role = ? WHERE user_id = ?";
+        db.query(queryUpdate, [role, user_id], (err, updateResult) => {
+            if (err) {
+                return res
+                    .status(500)
+                    .json({ message: "Database error.", error: err });
+            }
+            return res
+                .status(200)
+                .json({ message: "Role updated successfully." });
+        });
+    });
+};
+
 module.exports = {
     getUserPromise,
     getUser,
@@ -241,4 +284,5 @@ module.exports = {
     loginUser,
     logoutUser,
     profile,
+    updateRole,
 };

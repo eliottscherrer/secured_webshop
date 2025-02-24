@@ -49,6 +49,22 @@
                             >
                                 <%= user.password_salt ? "true" : "false" %>
                             </td>
+                            <td>
+                                <label>
+                                    <input type="radio" name="role_<%=
+                                    user.user_id %>" value="user" <%= user.role
+                                    === 'user' ? 'checked' : '' %>
+                                    onchange="updateRole(<%= user.user_id %>,
+                                    this.value)"> User
+                                </label>
+                                <label>
+                                    <input type="radio" name="role_<%=
+                                    user.user_id %>" value="admin" <%= user.role
+                                    === 'admin' ? 'checked' : '' %>
+                                    onchange="updateRole(<%= user.user_id %>,
+                                    this.value)"> Admin
+                                </label>
+                            </td>
                             <td><%= user.created_at %></td>
                         </tr>
                         <% }); %>
@@ -67,5 +83,25 @@
                 <button type="submit" class="btn-logout">Logout</button>
             </form>
         </div>
+        <script>
+            async function updateRole(userId, role) {
+                try {
+                    const response = await fetch("/api/users/updateRole", {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        credentials: "include",
+                        body: JSON.stringify({ user_id: userId, role }),
+                    });
+                    if (!response.ok) {
+                        alert("Erreur lors de la mise à jour du rôle.");
+                    }
+                } catch (error) {
+                    console.error("Erreur:", error);
+                    alert("Erreur lors de la mise à jour du rôle.");
+                }
+            }
+        </script>
     </body>
 </html>
