@@ -34,7 +34,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Username</th>
-                            <th>Use BCrypt</th>
+                            <th>Using BCrypt</th>
                             <th>Role</th>
                             <th>Created At</th>
                         </tr>
@@ -49,7 +49,28 @@
                             >
                                 <%= user.password_salt ? "true" : "false" %>
                             </td>
-                            <td><%= user.created_at %></td>
+                            <td>
+                                <label>
+                                    <input type="radio" name="role_<%=
+                                    user.user_id %>" value="user" <%= user.role
+                                    === 'user' ? 'checked' : '' %>
+                                    onchange="updateRole(<%= user.user_id %>,
+                                    this.value)"> User
+                                </label>
+                                <label>
+                                    <input type="radio" name="role_<%=
+                                    user.user_id %>" value="admin" <%= user.role
+                                    === 'admin' ? 'checked' : '' %>
+                                    onchange="updateRole(<%= user.user_id %>,
+                                    this.value)"> Admin
+                                </label>
+                            </td>
+                            <td>
+                                <%= new
+                                Date(user.created_at).toLocaleDateString("en-US",
+                                { weekday: 'long', year: 'numeric', month:
+                                'long', day: 'numeric' }) %>
+                            </td>
                         </tr>
                         <% }); %>
                     </tbody>
@@ -67,5 +88,24 @@
                 <button type="submit" class="btn-logout">Logout</button>
             </form>
         </div>
+        <script>
+            async function updateRole(userId, role) {
+                try {
+                    const response = await fetch("/api/users/updateRole", {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ user_id: userId, role }),
+                    });
+                    if (!response.ok) {
+                        alert("Erreur lors de la mise à jour du rôle.");
+                    }
+                } catch (error) {
+                    console.error("Erreur:", error);
+                    alert("Erreur lors de la mise à jour du rôle.");
+                }
+            }
+        </script>
     </body>
 </html>

@@ -9,4 +9,6 @@ router.post("/signup", controller.signupUser);
 router.post("/login", controller.loginUser);
 router.post("/logout", controller.logoutUser);
 
+router.put("/updateRole", controller.updateRole);
+
 module.exports = router;
