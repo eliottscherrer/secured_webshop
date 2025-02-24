@@ -216,10 +216,10 @@ const profile = async (req, res) => {
         const isAdmin = user.role === "admin";
 
         // If there's a "search" query param, and user is admin, do a search
-        const searchTerm = req.query.search;
+        const searchTerm = req.query.search || "";
         let userResults = null; // default, so we can distinguish from '[]'
 
-        if (isAdmin && searchTerm) {
+        if (isAdmin) {
             userResults = await searchUsersPromise(searchTerm);
         }
 
