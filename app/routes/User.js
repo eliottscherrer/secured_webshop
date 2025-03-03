@@ -1,5 +1,6 @@
 const express = require("express");
 const controller = require("../controllers/UserController");
+const { authenticateJWT } = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -9,6 +10,6 @@ router.post("/signup", controller.signupUser);
 router.post("/login", controller.loginUser);
 router.post("/logout", controller.logoutUser);
 
-router.put("/updateRole", controller.updateRole);
+router.put("/updateRole", authenticateJWT, controller.updateRole);
 
 module.exports = router;
