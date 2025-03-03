@@ -45,9 +45,9 @@
                             <td><%= user.user_id %></td>
                             <td><%= user.username %></td>
                             <td
-                                style="color: <%= user.password_salt ? 'green' : 'red' %>;"
+                                style="color: <%= user.password_salt ? 'red' : 'green' %>;"
                             >
-                                <%= user.password_salt ? "true" : "false" %>
+                                <%= user.password_salt ? "false" : "true" %>
                             </td>
                             <td>
                                 <label>
