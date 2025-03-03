@@ -227,6 +227,7 @@ const profile = async (req, res) => {
             username,
             isAdmin,
             users: userResults, // array or null
+            currentUserId: user.user_id,
         });
     } catch (error) {
         console.error("Error loading profile:", error);

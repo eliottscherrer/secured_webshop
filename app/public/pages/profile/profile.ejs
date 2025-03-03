@@ -53,16 +53,18 @@
                                 <label>
                                     <input type="radio" name="role_<%=
                                     user.user_id %>" value="user" <%= user.role
-                                    === 'user' ? 'checked' : '' %>
-                                    onchange="updateRole(<%= user.user_id %>,
-                                    this.value)"> User
+                                    === 'user' ? 'checked' : '' %> <%=
+                                    currentUserId == user.user_id ? 'disabled' :
+                                    '' %> onchange="updateRole(<%= user.user_id
+                                    %>, this.value)" > User
                                 </label>
                                 <label>
                                     <input type="radio" name="role_<%=
                                     user.user_id %>" value="admin" <%= user.role
-                                    === 'admin' ? 'checked' : '' %>
-                                    onchange="updateRole(<%= user.user_id %>,
-                                    this.value)"> Admin
+                                    === 'admin' ? 'checked' : '' %> <%=
+                                    currentUserId == user.user_id ? 'disabled' :
+                                    '' %> onchange="updateRole(<%= user.user_id
+                                    %>, this.value)" > Admin
                                 </label>
                             </td>
                             <td>
