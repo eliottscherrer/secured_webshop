@@ -28,6 +28,11 @@ Pour générer ces fichiers pour le développement, vous pouvez utiliser les com
 
 2. Ajoutez vos certificats SSL/TLS dans `app/certs/`.
 
+3. Importez la base de données MySQL à l'aide du [script](db_securewebshop.sql).
+    ```sh
+    mysql -u [username] -p [password] db_securewebshop < db_securewebshop.sql
+    ```
+
 4. Lancez le stack avec Docker Compose :
     ```sh
     docker-compose up -d
