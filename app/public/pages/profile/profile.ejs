@@ -90,6 +90,7 @@
                 <button type="submit" class="btn-logout">Logout</button>
             </form>
         </div>
+        <% if (isAdmin) { %>
         <script>
             async function updateRole(userId, role) {
                 try {
@@ -109,5 +110,6 @@
                 }
             }
         </script>
+        <% } %>
     </body>
 </html>
