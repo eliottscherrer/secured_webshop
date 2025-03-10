@@ -26,7 +26,9 @@ Pour générer ces fichiers pour le développement, vous pouvez utiliser les com
     JWT_SECRET=onglier
     ```
 
-2. Lancez le stack avec Docker Compose :
+2. Ajoutez vos certificats SSL/TLS dans `app/certs/`.
+
+4. Lancez le stack avec Docker Compose :
     ```sh
     docker-compose up -d
     ```
